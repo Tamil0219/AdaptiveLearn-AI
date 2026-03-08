@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartEvalAI - AI-Powered Education Assessment</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: none;
+        }
+        .score {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .feedback {
+            line-height: 1.6;
+        }
+        .loading {
+            text-align: center;
+            display: none;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 SmartEvalAI</h1>
+        <p style="text-align: center; margin-bottom: 30px;">AI-Powered Education Assessment Platform</p>
+
+        <div class="error" id="error"></div>
+
+        <form id="evaluationForm">
+            <div class="form-group">
+                <label for="question">Question:</label>
+                <input type="text" id="question" placeholder="Enter the question..." required>
+            </div>
+
+            <div class="form-group">
+                <label for="answer">Student Answer:</label>
+                <textarea id="answer" placeholder="Enter the student's answer..." required></textarea>
+            </div>
+
+            <button type="submit">Evaluate Answer</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <p>🤖 AI is evaluating your answer...</p>
+        </div>
+
+        <div class="result" id="result">
+            <h3>Evaluation Result</h3>
+            <div class="score" id="score"></div>
+            <div class="feedback" id="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('evaluationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const question = document.getElementById('question').value;
+            const answer = document.getElementById('answer').value;
+
+            // Hide previous results and show loading
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('loading').style.display = 'block';
+
+            try {
+                const response = await fetch('/api/ai/evaluate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        question: question,
+                        studentAnswer: answer
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('score').textContent = `Score: ${data.score}/10`;
+                    document.getElementById('feedback').textContent = data.feedback;
+                    document.getElementById('result').style.display = 'block';
+                } else {
+                    throw new Error(data.message || 'Evaluation failed');
+                }
+            } catch (error) {
+                document.getElementById('error').textContent = `Error: ${error.message}`;
+                document.getElementById('error').style.display = 'block';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

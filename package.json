@@ -1,0 +1,38 @@
+{
+  "name": "smarteval-ai-backend",
+  "version": "1.0.0",
+  "description": "SmartEvalAI - Professional Education Assessment Platform Backend",
+  "main": "index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node kill-and-start.js",
+    "dev:port" : "PORT=5001 node kill-and-start.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "education",
+    "assessment",
+    "ai",
+    "nodejs",
+    "express",
+    "mongodb"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.8.9"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "kill-port": "^2.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
